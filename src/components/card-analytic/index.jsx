@@ -23,9 +23,9 @@ export default function AnalyticCard(props) {
 
 AnalyticCard.propTypes = {
   label: PropTypes.string.isRequired,
-  amount: PropTypes.number.isRequired,
-  icon: PropTypes.number.isRequired,
-  prefix: PropTypes.string,
+  amount: PropTypes.string.isRequired,
+  icon: PropTypes.object.isRequired,
+  prefix: PropTypes.node,
   isRightBorder: PropTypes.bool,
   subfix: PropTypes.string.isRequired,
 };

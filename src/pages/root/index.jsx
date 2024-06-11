@@ -1,3 +1,4 @@
+import { Header } from "../../components/header";
 import Sidebar from "../../components/sidebar";
 import { Outlet } from "react-router-dom";
 
@@ -8,6 +9,7 @@ export default function Root() {
         <Sidebar />
       </div>
       <div className="px-10 py-4 w-full overflow-auto">
+        <Header />
         <Outlet />
       </div>
     </div>
