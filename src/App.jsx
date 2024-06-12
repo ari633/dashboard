@@ -6,6 +6,7 @@ import {
 import Root from "./pages/root";
 import Companies from "./pages/companies";
 import Dashboard from "./pages/dashboard";
+import CompanyDetail from "./pages/company-detail";
 
 const queryClient = new QueryClient()
 
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
       {
         path: "/companies",
         element: <Companies />,
+      },
+      {
+        path: "/companies/:id",
+        element: <CompanyDetail />,
       },
     ],
   },

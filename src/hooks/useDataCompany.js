@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
+
 export function useMyData(key, fetcher) {
   const query = useQuery({
     queryKey: [key],
