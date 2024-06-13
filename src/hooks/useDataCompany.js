@@ -23,7 +23,12 @@ export function useMyData(key, fetcher) {
     };
   }
 
-  const totalEmployee = query.data.reduce((total, company) => total + company.employees, 0).toLocaleString();
+  const totalEmployee = query.data.reduce((total, company) => {
+    if (typeof company.employees != "number") {
+      return total
+    }
+    return (total + company.employees)
+  }, 0).toLocaleString();
   const inactiveCompanies = query.data.filter(company => company.status === 'inactive');
   const indonesiaCompanies = query.data.filter(company => company.country === 'Indonesia');
   const totalEmployeeInactiveCompany = inactiveCompanies.reduce((total, company) => total + company.employees, 0).toLocaleString();

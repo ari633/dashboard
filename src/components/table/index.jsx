@@ -31,7 +31,7 @@ const Table = ({ data, itemsPerPage, columns }) => {
   };
 
   return (
-    <div>
+    <div className="overflow-x-auto">
       <table className="min-w-full divide-y divide-gray-200">
         <thead>
           <tr>
@@ -58,7 +58,7 @@ const Table = ({ data, itemsPerPage, columns }) => {
         </tbody>
       </table>
       <div className="py-10 bg-white border-t border-gray-200">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between">
           <div className="text-gray-400">
             Showing data {(currentPage - 1) * itemsPerPage + 1} to{" "}
             {currentPage * itemsPerPage} of {data.length}
@@ -117,7 +117,7 @@ const Table = ({ data, itemsPerPage, columns }) => {
 };
 
 Table.propTypes = {
-  data: PropTypes.array.isRequired,
+  data: PropTypes.array,
   columns: PropTypes.array.isRequired,
   itemsPerPage: PropTypes.number.isRequired,
 };

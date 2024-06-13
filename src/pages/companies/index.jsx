@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useEffect, useState } from "react";
+import { useEffect, useState, useReducer } from "react";
 import AnalyticCard from "../../components/card-analytic";
 import Card from "../../components/card";
 import {
@@ -13,17 +13,17 @@ import { useMyData } from "../../hooks/useDataCompany";
 import { getAllCompanies } from "../../services/companies";
 import Table from "../../components/table";
 import useDebounce from "../../hooks/useDebounce";
-import { dataSort } from "../../utils/data";
 import { Link } from "react-router-dom";
 import { StatusBadge } from "../../components/badge";
+import { companyDataReducer } from "../../reducers/companydata";
+import { useLoader } from "../../context/Loader";
+import Pdf from "../../components/pdf";
 
 const RenderPrefix = ({ className, children }) => (
   <span className={className}>{children}</span>
 );
 
-
 export default function Companies() {
-  const [dataTable, setDataTable] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOption, setSortOption] = useState("name");
   const [status, setStatus] = useState("All");
@@ -37,32 +37,37 @@ export default function Companies() {
     totalInactiveCompanies,
     totalEmployeeInactiveCompany,
     percentageActiveInactive,
+    activeCompanies,
+    inactiveCompanies,
   } = useMyData("companies", getAllCompanies());
 
+  const [companyData, dispatch] = useReducer(companyDataReducer, data);
+  const { setIsLoading, setIsError } = useLoader();
+
   useEffect(() => {
-    if (debouncedSearchTerm) {
-      const results = data.filter(
-        (item) =>
-          item.name.includes(debouncedSearchTerm) ||
-          item.country.includes(debouncedSearchTerm)
-      );
-      if (results) {
-        dataSort(results, sortOption, status, setDataTable);
-      }
-    } else {
-      dataSort(data, sortOption, status, setDataTable);
-    }
+    setIsLoading(isPending);
+    setIsError(error);
+  });
+
+  useEffect(() => {
+    dispatch({
+      type: "filter",
+      searchTerm: debouncedSearchTerm,
+      sortOption: sortOption,
+      feedData: data,
+      status: status,
+    });
+    console.log("sortOption", sortOption)
   }, [debouncedSearchTerm, data, sortOption, status]);
-
-  if (isPending) return "Loading...";
-
-  if (error) return `An error has occurred: ${error.message}`;
 
   const columns = [
     {
       label: "Company Name",
       display: (item) => (
-        <Link to={`/companies/${item.id}`} className="block max-w-44 truncate text-ellipsis ...">
+        <Link
+          to={`/companies/${item.id}`}
+          className="block max-w-44 truncate text-ellipsis ..."
+        >
           {item.name}
         </Link>
       ),
@@ -101,7 +106,7 @@ export default function Companies() {
     <div>
       <div className="pb-10">
         <Card>
-          <div className="grid grid-cols-3">
+          <div className="grid md:grid-cols-3 grid-cols-1 gap-8 md:gap-1">
             <AnalyticCard
               amount={totalCompanies}
               prefix={
@@ -127,7 +132,7 @@ export default function Companies() {
               isRightBorder
             />
             <AnalyticCard
-              amount="65"
+              amount={totalActiveCompanies}
               prefix={
                 <RenderPrefix className="font-semibold">
                   {percentageActiveInactive}%
@@ -141,7 +146,7 @@ export default function Companies() {
         </Card>
       </div>
       <Card>
-        <div className="flex justify-between">
+        <div className="flex flex-col md:flex-row md:justify-between">
           <h1 className="font-semibold text-lg">Companies</h1>
           <div className="space-x-4">
             <input
@@ -164,7 +169,7 @@ export default function Companies() {
             </div>
           </div>
         </div>
-        <div className="flex justify-between">
+        <div className="flex flex-col md:flex-row md:justify-between">
           <div className="space-x-4">
             <button
               className={`font-bold ${
@@ -195,9 +200,22 @@ export default function Companies() {
               Inactive ({totalInactiveCompanies})
             </button>
           </div>
-          <button className="bg-indigo-500 text-white px-4 py-2 rounded">Create PDF</button>
+          {data && (
+            <Pdf
+              data={() => {
+                if (status === "Active") {
+                  return activeCompanies;
+                } else if (status === "Inactive") {
+                  return inactiveCompanies;
+                } else {
+                  return data;
+                }
+              }}
+              status={status}
+            />
+          )}
         </div>
-        <Table data={dataTable} itemsPerPage={8} columns={columns} />
+        <Table data={companyData} itemsPerPage={8} columns={columns} />
       </Card>
     </div>
   );

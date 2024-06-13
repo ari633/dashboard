@@ -1,5 +1,5 @@
-export const dataSort = (data, option, status, callback) => {
-  if (data) {
+export const dataSort = (data, option, status) => {
+  if (data && data.length > 0) {
     
     if (status !== "All") {
       data = data.filter(company => company.status === status.toLowerCase());
@@ -8,14 +8,14 @@ export const dataSort = (data, option, status, callback) => {
     const sortedData = data.sort((a, b) => {
       const nameA = a[option].toUpperCase();
       const nameB = b[option].toUpperCase();
-      if (nameA < nameB) {
+      if (nameA > nameB) {
         return -1;
       }
-      if (nameA > nameB) {
+      if (nameA < nameB) {
         return 1;
       }
       return 0;
     });
-    callback(sortedData);
+    return sortedData;
   }
 };

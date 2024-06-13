@@ -7,3 +7,13 @@ export function getAllCompanies() {
 export function getCompany(id) {
   return fetch(`${BASE_URL}/api/v1/companies/${id}`).then((res) => res.json());
 }
+
+export function updateCompany(id, payload) {
+  return fetch(`${BASE_URL}/api/v1/companies/${id}`, {
+    method: 'PUT', 
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload), 
+  }).then(response => response.json());
+}

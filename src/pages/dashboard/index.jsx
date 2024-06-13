@@ -1,10 +1,12 @@
 /* eslint-disable react/prop-types */
+import { useEffect } from "react";
 import Card from "../../components/card";
 import CardCompany from "../../components/card-company";
 import { useMyData } from "../../hooks/useDataCompany";
 import { getAllCompanies } from "../../services/companies";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie, Doughnut } from "react-chartjs-2";
+import { useLoader } from "../../context/Loader";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -19,9 +21,12 @@ const Dashboard = () => {
     totalIndonesiaCompany,
     top6ActiveCompanies,
   } = useMyData("companies", getAllCompanies());
-
-  if (isPending) return "Loading...";
-  if (error) return `An error has occurred: ${error.message}`;
+  const {setIsLoading, setIsError} = useLoader();
+  useEffect(() => {
+    setIsLoading(isPending);
+    setIsError(error);
+  })
+  if (isPending || error) return <></>;
 
   const dataCompanies = {
     labels: ["Active", "Inactive"],
@@ -61,7 +66,7 @@ const Dashboard = () => {
       />
       <Card>
         <h1 className="font-semibold text-lg">Big 6 Active Companies</h1>
-        <div className="grid grid-cols-3 gap-4 mt-5">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-5">
           {top6ActiveCompanies.map((item, idx) => (
             <CardCompany
               key={`card_company_dashbard${idx}`}
@@ -88,7 +93,7 @@ const ChartSection = ({
   percentageIndonesiaCompany,
 }) => (
   <div className="pb-10">
-    <div className="grid grid-cols-3 gap-4">
+    <div className="grid md:grid-cols-3 grid-cols-1 gap-8 md:gap-4">
       <ChartCard
         title="Active vs Inactive"
         data={dataCompanies}

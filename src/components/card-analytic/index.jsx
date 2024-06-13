@@ -5,8 +5,8 @@ export default function AnalyticCard(props) {
   const { label, amount, prefix, subfix, icon, isRightBorder } = props;
   return (
     <div
-      className={`flex justify-center items-center ${
-        isRightBorder ? "border-r" : ""
+      className={`flex md:justify-center md:items-center ${
+        isRightBorder ? "md:border-r" : ""
       }`}
     >
       <div className="w-24 h-24 rounded-full bg-green-100 block flex justify-center items-center text-green-600">
@@ -23,7 +23,7 @@ export default function AnalyticCard(props) {
 
 AnalyticCard.propTypes = {
   label: PropTypes.string.isRequired,
-  amount: PropTypes.string.isRequired,
+  amount: PropTypes.any.isRequired,
   icon: PropTypes.object.isRequired,
   prefix: PropTypes.node,
   isRightBorder: PropTypes.bool,
