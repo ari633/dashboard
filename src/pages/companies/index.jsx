@@ -148,7 +148,7 @@ export default function Companies() {
       <Card>
         <div className="flex flex-col md:flex-row md:justify-between">
           <h1 className="font-semibold text-lg">Companies</h1>
-          <div className="space-x-4">
+          <div className="flex flex-col md:flex-row md:space-x-4 md:space-y-0 space-y-4">
             <input
               type="text"
               placeholder="Filter..."

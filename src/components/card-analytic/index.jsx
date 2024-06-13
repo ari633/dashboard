@@ -9,7 +9,7 @@ export default function AnalyticCard(props) {
         isRightBorder ? "md:border-r" : ""
       }`}
     >
-      <div className="w-24 h-24 rounded-full bg-green-100 block flex justify-center items-center text-green-600">
+      <div className="hidden md:flex w-24 h-24 rounded-full bg-green-100 block flex justify-center items-center text-green-600">
         <FontAwesomeIcon icon={icon} size="2x" />
       </div>
       <div className="pl-5">
