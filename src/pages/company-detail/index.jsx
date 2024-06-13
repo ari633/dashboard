@@ -1,17 +1,22 @@
 import { useEffect, useState } from "react";
 import Card from "../../components/card";
 import { useParams } from "react-router-dom";
-import { getCompany, updateCompany } from "../../services/companies";
+import { getAllCompanies, getCompany, updateCompany } from "../../services/companies";
 import { useQuery } from "@tanstack/react-query";
 import { StatusBadge } from "../../components/badge";
 import Button from "../../components/button";
 import Modal from "../../components/modal";
 import useForm from "../../hooks/useForm";
+import { useMyData } from "../../hooks/useDataCompany";
 
 export default function CompanyDetail() {
   let { id } = useParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [values, setValues, handleChange] = useForm({});
+
+  const {
+    categoryCount,
+  } = useMyData("companies", getAllCompanies());
 
   const { data, refetch } = useQuery({
     queryKey: ["companyDeatail", id],
@@ -61,8 +66,8 @@ export default function CompanyDetail() {
             onChange={handleChange}
           >
             <option value="">--Category--</option>
-            <option value="Retail">Retail</option>
-            <option value="Hospitality">Hospitality</option>
+
+            {categoryCount && Object.keys(categoryCount).map((item, i) => (<option key={`opt_${i}`} value={item}>{item}</option>))}            
           </select>
           <input
             required
